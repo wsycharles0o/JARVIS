@@ -1,12 +1,13 @@
 from cv2 import cv
 from GetFrame import init,camara_available,get_point,get_capture,get_time,get_image,get_thresholded_image,calculate_point,get_frame
 def test():
-    init()
+    init(True, ["Blue", "Red"]);
     if not camara_available(): print "dead"; return
     while(True):
-        l = get_frame( [ (cv.Scalar(90,160,60),cv.Scalar(120,256,256)) ] )
+        l = get_frame( [ (cv.Scalar(90,160,60),cv.Scalar(120,256,256)), (cv.Scalar(160,160,60),cv.Scalar(180,256,256)) ] )
         print "{0}".format(l)
-     
+
+"""
 def test_efficiency():
     #cv.NamedWindow("th");
     #cv.NamedWindow("v");
@@ -61,5 +62,5 @@ def test_efficiency():
     print "get_thresholded_image: {0}".format(l[2]/count)
     print "get_point: {0}".format(l[3]/count)
     print "all: {0}".format(l[4]/count)
-    
+"""
 test()

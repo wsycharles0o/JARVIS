@@ -2,11 +2,13 @@ __author__="Jacky"
 __date__ ="$Oct 18, 2013 6:44:33 PM$"
 
 from cv2 import cv
-import numpy
 import time
 
 AREA_THRESHOLD = 5000.0 # smaller than this: regard as 0.
 capture = None
+_debug = False
+_color_names = []
+CAMERA_WINDOW = "Camera"
 
 get_time = lambda: time.time()
 
@@ -27,7 +29,7 @@ def get_image(capture):
     time: time of capturing.
     """
     frame = cv.QueryFrame(capture);
-    frame = blur_frame(frame) # TURN OFF BLURRING HERE
+    #frame = blur_frame(frame) # TURN OFF BLURRING HERE
     t = get_time()
     return (frame,t)
 
@@ -71,15 +73,25 @@ def calculate_point(img_threshed):
         area = None
     return (x, y, area)
 
-def get_point(frame, range1, range2):
+def get_point(frame, range1, range2, color_num):
     img_threshed = get_thresholded_image(frame, range1,range2)
+    if _debug: cv.ShowImage(_color_names[color_num], img_threshed)
     x, y, area = calculate_point(img_threshed)
     return (x, y, area)
 
 #Available outside
-def init():
+
+def init(debug = False, color_names = []):
     global capture
+    global _debug
+    global _color_names
     capture = get_capture();
+    _debug = debug
+    _color_names = color_names
+    if _debug:
+        cv.NamedWindow(CAMERA_WINDOW)
+        for color in _color_names:
+            cv.NamedWindow(color)
 
 def camara_available():
     """
@@ -100,8 +112,12 @@ def get_frame(ranges):
     """
     if capture:
         frame, timestamp = get_image(capture)
+        if _debug: cv.ShowImage(CAMERA_WINDOW, frame)
         result = [timestamp]
+        i = 0
         for (range1, range2) in ranges:
-            result.append(get_point(frame, range1, range2))
+            result.append(get_point(frame, range1, range2, i))
+            i += 1
+        if _debug: cv.WaitKey(10);
         return result
     return [get_time()] + [None] * len(ranges)
