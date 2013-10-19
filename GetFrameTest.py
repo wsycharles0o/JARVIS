@@ -1,11 +1,11 @@
 from cv2 import cv
-from GetPoints import init,camara_available,get_point,get_capture,get_time,get_frame,get_thresholded_image,calculate_point
+from GetFrame import init,camara_available,get_point,get_capture,get_time,get_image,get_thresholded_image,calculate_point,get_frame
 def test():
     init()
     if not camara_available(): print "dead"; return
     while(True):
-        x, y, area, timestamp = get_point(cv.Scalar(90,160,60),cv.Scalar(120,256,256))
-        print "Result: ({0}, {1}, {2}) @ {3}".format(x, y, area, timestamp)
+        l = get_frame( [ (cv.Scalar(90,160,60),cv.Scalar(120,256,256)) ] )
+        print "{0}".format(l)
      
 def test_efficiency():
     #cv.NamedWindow("th");
@@ -18,7 +18,7 @@ def test_efficiency():
     l = [0 ,0, 0, 0,0]
     while True:
         t = get_time()        
-        frame, timestamp = get_frame(capture)
+        frame, timestamp = get_image(capture)
         #print "-------------get_frame: {0}".format(t-prevtime)
         l[0] += t-prevtime
         prevtime = t

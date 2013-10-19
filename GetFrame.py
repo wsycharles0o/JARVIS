@@ -2,7 +2,8 @@ __author__="Jacky"
 __date__ ="$Oct 18, 2013 6:44:33 PM$"
 
 from cv2 import cv
-import numpy, time
+import numpy
+import time
 
 AREA_THRESHOLD = 5000.0 # smaller than this: regard as 0.
 capture = None
@@ -19,13 +20,14 @@ def get_capture():
         return None
     return capture
 
-def get_frame(capture):
+def get_image(capture):
     """
     Return (frame, time)
-    Start grabbing a frame. If can't grab a frame, frame is None.
+    Start grabbing a image from camera. If can't grab a frame, frame is None.
     time: time of capturing.
     """
     frame = cv.QueryFrame(capture);
+    frame = blur_frame(frame) # TURN OFF BLURRING HERE
     t = get_time()
     return (frame,t)
 
@@ -55,7 +57,7 @@ def calculate_point(img_threshed):
     area: 0 if object is not found, else object's area
         area only != 0  if it is calculated to be greater than AREA_THRESHOLD
     """
-    mat = cv.fromarray(numpy.asarray(img_threshed[:,:])) # FIXME very inefficient
+    mat = img_threshed[:,:]
     moments = cv.Moments(mat,0)
     moment10 = cv.GetSpatialMoment(moments, 1, 0);
     moment01 = cv.GetSpatialMoment(moments, 0, 1);
@@ -69,6 +71,12 @@ def calculate_point(img_threshed):
         area = None
     return (x, y, area)
 
+def get_point(frame, range1, range2):
+    img_threshed = get_thresholded_image(frame, range1,range2)
+    x, y, area = calculate_point(img_threshed)
+    return (x, y, area)
+
+#Available outside
 def init():
     global capture
     capture = get_capture();
@@ -79,20 +87,21 @@ def camara_available():
     """
     return capture is not None
 
-def get_point(range1, range2):
+def get_frame(ranges):
     """
     range1, range2: init by cv.Scalar(h, s, v)
-    Return a three number tuple: (x, y, area, timestamp)
+    Return a list:
+    the first element is the time stamp when image is captured
+    the rest are three number tuples: (x, y, area, timestamp)
     x: None if object is not found, else object's mid point's x
     y: None if object is not found, else object's mid point's y
     area: 0 if object is not found, else object's area
         area only != 0  if it is calculated to be greater than AREA_THRESHOLD
-    timestamp: timestamp when image is captured
     """
     if capture:
-        frame, timestamp = get_frame(capture)
-        img_threshed = get_thresholded_image(frame, range1,range2)
-        x, y, area = calculate_point(img_threshed)
-        return (x, y, area, timestamp)
-    return (None, None, None, get_time())
-
+        frame, timestamp = get_image(capture)
+        result = [timestamp]
+        for (range1, range2) in ranges:
+            result.append(get_point(frame, range1, range2))
+        return result
+    return [get_time()] + [None] * len(ranges)
