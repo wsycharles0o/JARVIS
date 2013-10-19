@@ -36,10 +36,10 @@ def __main__():
             #        imgScribble = cv.CreateImage(cv.GetSize(frame), 8, 3)
             imgYellowThresh = GetThresholdedImage(frame)
             print type(imgYellowThresh)
-            #moments = cv.Moments(imgYellowThresh, 1) # FIXME
-            #moment10 = cv.GetSpatialMoment(moments,1,0)
-            #moment01 = cv.GetSpatialMoment(moments,0,1)
-            #area = cv.GetCentralMoment(moments,0,0)
+            #moments = cv2.moments(mat,0)
+            #moment10 = moments['m10']
+            #moment01 = moments['m01']
+            #area = moments['m00']
             #posX = 0
             #poxY = 0
             #lastX = posX

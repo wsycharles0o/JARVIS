@@ -1,11 +1,11 @@
 from cv2 import cv
-from GetFrame import init,camara_available,get_point,get_capture,get_time,get_image,get_thresholded_image,calculate_point,get_frame
+from Capture import init,camara_available,get_point,get_time,get_image,get_thresholded_image,get_frame
 def test():
     init(True, ["Blue", "Red"]);
     if not camara_available(): print "dead"; return
     while(True):
         l = get_frame( [ (cv.Scalar(90,160,60),cv.Scalar(120,256,256)), (cv.Scalar(160,160,60),cv.Scalar(180,256,256)) ] )
-        print "{0}".format(l)
+        #print "{0}".format(l)
 
 """
 def test_efficiency():
