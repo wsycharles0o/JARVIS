@@ -12,7 +12,7 @@ def GetThresholdedImage(imgHSV):
 	while 1 is 1:
 		frame = cap.read()
 		if not frame:
-		break
+                    break
 
 	#frame = cv.CloneImage(frame)
 

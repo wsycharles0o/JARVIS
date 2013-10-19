@@ -30,13 +30,13 @@ def __main__():
             frame = cv.QueryFrame(capture)
             if not frame:
                     counter += 1
-                    if counter>10: break
+                    if counter>10: break # only wait 10 loops
                     continue
             if imgScribble is not None:
                     imgScribble = cv.CreateImage(cv.GetSize(frame), 8, 3)
             imgYellowThresh = GetThresholdedImage(frame)
-            print imgYellowThresh
-            moments = cv.Moments(imgYellowThresh,1) #Debug FIXME
+            print type(imgYellowThresh)
+            moments = cv.Moments(imgYellowThresh, 1) # FIXME
             moment10 = cv.GetSpatialMoment(moments,1,0)
             moment01 = cv.GetSpatialMoment(moments,0,1)
             area = cv.GetCentralMoment(moments,0,0)
