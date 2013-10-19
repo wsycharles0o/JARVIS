@@ -24,7 +24,7 @@ def __main__():
             sys.exit(-1)
     cv.NamedWindow("video")
     cv.NamedWindow("th")
-    imgScribble = None
+    #imgScribble = None
     counter = 1
     while True:
             frame = cv.QueryFrame(capture)
@@ -32,23 +32,23 @@ def __main__():
                     counter += 1
                     if counter>10: break # only wait 10 loops
                     continue
-            if imgScribble is not None:
-                    imgScribble = cv.CreateImage(cv.GetSize(frame), 8, 3)
+            #if imgScribble is not None:
+            #        imgScribble = cv.CreateImage(cv.GetSize(frame), 8, 3)
             imgYellowThresh = GetThresholdedImage(frame)
             print type(imgYellowThresh)
-            moments = cv.Moments(imgYellowThresh, 1) # FIXME
-            moment10 = cv.GetSpatialMoment(moments,1,0)
-            moment01 = cv.GetSpatialMoment(moments,0,1)
-            area = cv.GetCentralMoment(moments,0,0)
-            posX = 0
-            poxY = 0
-            lastX = posX
-            lastY = posY
-            posX = moment10/area
-            posY = moment01/area
-            print "position {0},{1}".format(posX,posY)
-            if imgScribble is not None:
-                    cv.Add(frame, imgScribble, frame)
+            #moments = cv.Moments(imgYellowThresh, 1) # FIXME
+            #moment10 = cv.GetSpatialMoment(moments,1,0)
+            #moment01 = cv.GetSpatialMoment(moments,0,1)
+            #area = cv.GetCentralMoment(moments,0,0)
+            #posX = 0
+            #poxY = 0
+            #lastX = posX
+            #lastY = posY
+            #posX = moment10/area
+            #posY = moment01/area
+            #print "position {0},{1}".format(posX,posY)
+            #if imgScribble is not None:
+            #        cv.Add(frame, imgScribble, frame)
             cv.ShowImage("th", imgYellowThresh)
             cv.ShowImage("video", frame);
             c = cv.WaitKey(10)
